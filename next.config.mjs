@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
-  /* Baqi standard config yahan rahegi */
+  /* Dynamic features enable rehne ke liye output: 'export' hata diya gaya hai */
 };
 
 export default nextConfig;
