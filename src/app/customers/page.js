@@ -201,7 +201,9 @@ export default function CustomersPage() {
                       padding: "12px 14px",
                       display: "flex",
                       justifyContent: "space-between",
-                      alignItems: "center"
+                      alignItems: "center",
+                      flexWrap: "wrap",
+                      gap: "8px"
                     }}
                   >
                     <div>

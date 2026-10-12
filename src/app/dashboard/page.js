@@ -163,7 +163,7 @@ export default function DashboardPage() {
             <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>This Month</span>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "10px", textAlign: "center" }}>
+          <div className="stats-row-3" style={{ textAlign: "center" }}>
             <div style={{ background: "var(--bg-surface)", padding: "12px", borderRadius: "var(--radius-md)" }}>
               <span style={{ fontSize: "11px", color: "var(--text-muted)", display: "block" }}>Confirmed</span>
               <strong style={{ fontSize: "20px", color: "var(--accent-green)" }}>{metrics.confirmedBookingsCount}</strong>

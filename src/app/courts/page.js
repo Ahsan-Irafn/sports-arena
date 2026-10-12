@@ -210,7 +210,7 @@ export default function CourtsPage() {
                   />
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+                <div className="form-row-2">
                   <div className="form-group">
                     <label className="form-label">Sport Type</label>
                     <select

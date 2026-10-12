@@ -54,6 +54,7 @@ function BookingsContent() {
 
   // Calendar week state
   const [currentDate, setCurrentDate] = useState(getTodayDateString());
+  const [mobileDayFilter, setMobileDayFilter] = useState("all"); // "all" | specific date string
 
   // Modals state
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -373,7 +374,7 @@ function BookingsContent() {
       {viewMode === "calendar" && (
         <div>
           {/* Week Navigator */}
-          <div className="card" style={{ padding: "14px 20px", marginBottom: "16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div className="card" style={{ padding: "14px 20px", marginBottom: "16px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
               <button
                 className="btn btn-secondary btn-sm"
@@ -426,9 +427,33 @@ function BookingsContent() {
             </div>
           </div>
 
+          {/* Mobile Day Selector Bar (Visible on phones & tablets) */}
+          <div className="mobile-day-pills">
+            <button
+              type="button"
+              className={`mobile-day-pill ${mobileDayFilter === "all" ? "active" : ""}`}
+              onClick={() => setMobileDayFilter("all")}
+            >
+              All 7 Days
+            </button>
+            {weekDays.map((d) => (
+              <button
+                key={d.dateStr}
+                type="button"
+                className={`mobile-day-pill ${mobileDayFilter === d.dateStr ? "active" : ""}`}
+                onClick={() => setMobileDayFilter(d.dateStr)}
+              >
+                <span>{d.dayName.slice(0, 3)}</span>
+                <strong>{d.dayNumber} {d.isToday ? "•" : ""}</strong>
+              </button>
+            ))}
+          </div>
+
           {/* Calendar Grid */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "12px", minHeight: "450px" }}>
-            {weekDays.map((day) => {
+          <div className="calendar-grid" style={{ minHeight: "450px" }}>
+            {weekDays
+              .filter((day) => mobileDayFilter === "all" || day.dateStr === mobileDayFilter)
+              .map((day) => {
               const dayBookings = (data.bookings || []).filter((b) => {
                 if (b.bookingDate !== day.dateStr) return false;
                 if (courtFilter !== "all" && b.courtId !== courtFilter) return false;
@@ -702,7 +727,7 @@ function BookingsContent() {
             <form onSubmit={handleCreateSubmit}>
               <div className="modal-body">
                 {/* Court & Sport Selection */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
+                <div className="form-row-2">
                   <div className="form-group">
                     <label className="form-label">Select Court</label>
                     <select
@@ -732,7 +757,7 @@ function BookingsContent() {
                 </div>
 
                 {/* Date & Timings */}
-                <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr 1fr", gap: "14px" }}>
+                <div className="form-row-3">
                   <div className="form-group">
                     <label className="form-label">Booking Date</label>
                     <input
@@ -786,7 +811,7 @@ function BookingsContent() {
                 )}
 
                 {/* Customer Details */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
+                <div className="form-row-2">
                   <div className="form-group">
                     <label className="form-label">Customer Name</label>
                     <input
@@ -813,7 +838,7 @@ function BookingsContent() {
                 </div>
 
                 {/* Pricing & Discounts */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
+                <div className="form-row-2">
                   <div className="form-group">
                     <label className="form-label">Discount Type</label>
                     <select
@@ -846,7 +871,7 @@ function BookingsContent() {
 
                 {/* Advance Payment & Method (Only for brand new booking) */}
                 {!editingBookingId && (
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
+                  <div className="form-row-2">
                     <div className="form-group">
                       <label className="form-label">
                         Advance Paid Now
@@ -975,7 +1000,7 @@ function BookingsContent() {
               </div>
 
               {/* Financial Breakdown */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "10px", marginBottom: "16px", textAlign: "center" }}>
+              <div className="stats-row-3" style={{ marginBottom: "16px", textAlign: "center" }}>
                 <div style={{ background: "var(--bg-surface)", padding: "12px", borderRadius: "var(--radius-md)" }}>
                   <span style={{ fontSize: "11px", color: "var(--text-muted)", display: "block" }}>Total Bill</span>
                   <strong style={{ fontSize: "18px", color: "var(--text-main)" }}>{formatPKR(selectedBooking.totalAmount)}</strong>
@@ -1030,7 +1055,7 @@ function BookingsContent() {
                     <Banknote style={{ width: 16, height: 16 }} />
                     <span>Collect Remaining Cash from Customer</span>
                   </h4>
-                  <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                  <div style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap" }}>
                     <input
                       type="number"
                       className="form-input"

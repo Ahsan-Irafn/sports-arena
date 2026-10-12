@@ -12,11 +12,12 @@ import {
   Users,
   Trophy,
   Wallet,
-  LogOut
+  LogOut,
+  X
 } from "lucide-react";
 import { logout, getCurrentUser } from "@/lib/auth";
 
-function SidebarNav() {
+function SidebarNav({ onItemClick }) {
   const pathname = usePathname();
 
   const navItems = [
@@ -40,6 +41,7 @@ function SidebarNav() {
             key={item.href}
             href={item.href}
             className={`nav-item ${isActive ? "active" : ""}`}
+            onClick={onItemClick}
           >
             <Icon className="nav-icon" />
             <span>{item.label}</span>
@@ -50,7 +52,7 @@ function SidebarNav() {
   );
 }
 
-export default function Sidebar() {
+export default function Sidebar({ mobileOpen = false, onClose = () => {} }) {
   const router = useRouter();
   const [user, setUser] = useState(null);
 
@@ -66,21 +68,32 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="app-sidebar no-print">
+    <aside className={`app-sidebar no-print ${mobileOpen ? "mobile-open" : ""}`}>
       {/* Brand Header */}
       <div className="sidebar-header">
-        <div className="logo-badge">
-          <span>3X</span>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", flex: 1 }}>
+          <div className="logo-badge">
+            <span>3X</span>
+          </div>
+          <div className="sidebar-title">
+            <h2>3X Sports Arena</h2>
+            <span>Admin Portal · Lahore</span>
+          </div>
         </div>
-        <div className="sidebar-title">
-          <h2>3X Sports Arena</h2>
-          <span>Admin Portal · Lahore</span>
-        </div>
+
+        {/* Mobile Close Button */}
+        <button
+          className="mobile-close-btn"
+          onClick={onClose}
+          aria-label="Close navigation menu"
+        >
+          <X style={{ width: 18, height: 18 }} />
+        </button>
       </div>
 
       {/* Navigation Links wrapped in Suspense */}
       <Suspense fallback={<div style={{ padding: "16px", color: "var(--text-muted)" }}>Loading menu...</div>}>
-        <SidebarNav />
+        <SidebarNav onItemClick={onClose} />
       </Suspense>
 
       {/* Admin User Footer with Logout */}

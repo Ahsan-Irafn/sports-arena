@@ -178,7 +178,7 @@ function ExpensesContent() {
       </div>
 
       {/* Filter Bar */}
-      <div className="card" style={{ padding: "12px 20px", marginBottom: "16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div className="card" style={{ padding: "12px 20px", marginBottom: "16px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <Filter style={{ width: 15, height: 15, color: "var(--text-muted)" }} />
           <span style={{ fontSize: "13px", color: "var(--text-muted)" }}>Filter by Category:</span>
@@ -297,7 +297,7 @@ function ExpensesContent() {
                   </select>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+                <div className="form-row-2">
                   <div className="form-group">
                     <label className="form-label">Amount (PKR)</label>
                     <input
