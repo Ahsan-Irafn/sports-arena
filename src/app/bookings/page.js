@@ -718,7 +718,12 @@ function BookingsContent() {
 
       {/* MODAL 1: CREATE OR EDIT BOOKING */}
       {isCreateModalOpen && (
-        <div className="modal-overlay">
+        <div
+          className="modal-overlay"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsCreateModalOpen(false);
+          }}
+        >
           <div className="modal-content" style={{ maxWidth: "680px" }}>
             <div className="modal-header">
               <h3>{editingBookingId ? "Edit Booking Details" : "Create Court Booking"}</h3>
@@ -965,7 +970,12 @@ function BookingsContent() {
 
       {/* MODAL 2: BOOKING DETAILS, CASH COLLECTION & INVOICE */}
       {selectedBooking && (
-        <div className="modal-overlay">
+        <div
+          className="modal-overlay"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedBooking(null);
+          }}
+        >
           <div className="modal-content" style={{ maxWidth: "600px" }}>
             <div className="modal-header">
               <div>

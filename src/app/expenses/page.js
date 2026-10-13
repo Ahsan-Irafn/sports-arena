@@ -274,7 +274,12 @@ function ExpensesContent() {
 
       {/* MODAL: RECORD EXPENSE */}
       {isModalOpen && (
-        <div className="modal-overlay">
+        <div
+          className="modal-overlay"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsModalOpen(false);
+          }}
+        >
           <div className="modal-content" style={{ maxWidth: "520px" }}>
             <div className="modal-header">
               <h3>Record Arena Expense</h3>

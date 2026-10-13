@@ -176,7 +176,12 @@ export default function CustomersPage() {
 
       {/* CUSTOMER HISTORY MODAL */}
       {selectedCustomer && (
-        <div className="modal-overlay">
+        <div
+          className="modal-overlay"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedCustomer(null);
+          }}
+        >
           <div className="modal-content" style={{ maxWidth: "600px" }}>
             <div className="modal-header">
               <div>

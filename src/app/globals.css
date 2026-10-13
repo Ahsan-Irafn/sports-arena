@@ -552,14 +552,16 @@ h1, h2, h3, h4, h5, h6 {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(2, 6, 23, 0.75);
-  backdrop-filter: blur(6px);
-  z-index: 50;
+  background-color: rgba(2, 6, 23, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 10000 !important; /* Always above sidebar (100) and bottom-nav (80) */
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
   animation: fadeIn 0.15s ease-out;
+  overscroll-behavior: contain;
 }
 
 .modal-content {
@@ -569,21 +571,39 @@ h1, h2, h3, h4, h5, h6 {
   width: 100%;
   max-width: 620px;
   max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: var(--shadow-lg);
+  max-height: 90dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Header and Footer stay pinned; only modal-body scrolls! */
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 30px rgba(16, 185, 129, 0.08);
   animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.modal-content > form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .modal-header {
-  padding: 20px 24px;
+  padding: 18px 24px;
   border-bottom: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
+  background-color: var(--bg-card);
+  position: relative;
+  z-index: 2;
 }
 
 .modal-header h3 {
   font-size: 18px;
+  font-weight: 700;
+  color: var(--text-main);
 }
 
 .modal-close {
@@ -591,12 +611,14 @@ h1, h2, h3, h4, h5, h6 {
   border: none;
   color: var(--text-muted);
   cursor: pointer;
-  font-size: 20px;
+  font-size: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
+  width: 32px;
+  height: 32px;
   border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
 }
 
 .modal-close:hover {
@@ -606,6 +628,11 @@ h1, h2, h3, h4, h5, h6 {
 
 .modal-body {
   padding: 24px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  flex: 1;
+  min-height: 0;
 }
 
 .modal-footer {
@@ -613,10 +640,15 @@ h1, h2, h3, h4, h5, h6 {
   border-top: 1px solid var(--border);
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  align-items: center;
+  gap: 12px;
   background-color: var(--bg-surface);
   border-bottom-left-radius: var(--radius-xl);
   border-bottom-right-radius: var(--radius-xl);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.2);
 }
 
 /* Tabs */
@@ -764,6 +796,15 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
   justify-content: space-around;
   align-items: center;
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+
+/* Whenever ANY modal is open on the screen, slide bottom-nav completely down so it NEVER covers modal buttons */
+body:has(.modal-overlay) .mobile-bottom-nav {
+  transform: translateY(120%);
+  opacity: 0;
+  pointer-events: none !important;
+  visibility: hidden;
 }
 
 .bottom-nav-item {
@@ -974,42 +1015,80 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .modal-overlay {
-    padding: 8px;
-    align-items: flex-end; /* Modern bottom-sheet style on mobile */
+    padding: 0;
+    align-items: flex-end; /* Modern mobile bottom sheet */
+    z-index: 10000 !important;
   }
 
   .modal-content {
-    max-height: 94vh;
+    max-height: 82vh;
+    max-height: 82dvh; /* Leaves ~18% clear space at top so header is NEVER cut off under status bar/notch */
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+    border-top-left-radius: 22px;
+    border-top-right-radius: 22px;
+    border-bottom: none;
     width: 100%;
+    margin: 0;
+    box-shadow: 0 -10px 45px rgba(0, 0, 0, 0.9);
   }
 
   .modal-header {
-    padding: 16px 16px;
+    padding: 14px 18px;
+    border-top-left-radius: 22px;
+    border-top-right-radius: 22px;
+    background-color: var(--bg-card);
+  }
+
+  .modal-header h3 {
+    font-size: 16px;
   }
 
   .modal-body {
-    padding: 16px;
+    padding: 16px 16px 20px 16px;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
   }
 
   .modal-footer {
-    padding: 14px 16px;
-    flex-direction: column;
-    gap: 8px;
+    padding: 12px 16px;
+    padding-bottom: max(16px, env(safe-area-inset-bottom, 16px)); /* Clean space above device home indicator */
+    flex-direction: row; /* Horizontal button layout so Cancel and Create/Confirm are side by side */
+    justify-content: flex-end;
+    gap: 10px;
+    background-color: var(--bg-surface);
+    border-radius: 0;
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+  }
+
+  .modal-footer > button,
+  .modal-footer > .btn {
+    flex: 1;
+    min-height: 46px; /* Touch-friendly size */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
   }
 
   .modal-footer > div {
     width: 100%;
     display: flex;
-    justify-content: stretch;
+    flex-wrap: wrap;
+    justify-content: space-between;
     gap: 8px;
   }
 
   .modal-footer > div > * {
-    flex: 1;
-    text-align: center;
+    flex: 1 1 calc(50% - 8px);
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
+    text-align: center;
   }
 
   .tabs-bar {

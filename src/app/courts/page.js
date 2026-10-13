@@ -176,7 +176,12 @@ export default function CourtsPage() {
 
       {/* MODAL: ADD / EDIT COURT */}
       {isModalOpen && (
-        <div className="modal-overlay">
+        <div
+          className="modal-overlay"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsModalOpen(false);
+          }}
+        >
           <div className="modal-content" style={{ maxWidth: "520px" }}>
             <div className="modal-header">
               <h3>{editingCourt ? "Edit Court Rate & Settings" : "Add New Court"}</h3>
